@@ -8,6 +8,12 @@ businessDuration <- function(startdate="",enddate="",starttime=NA,endtime=NA,wee
   if(!result[1] %in% c("POSIXlt","POSIXct")){
     return("enddate must be in POSIXlt/POSIXct format")
   }
+  if(is.na(startdate)){
+    return(NA)
+  }
+  if(is.na(enddate)){
+    return(NA)
+  }
   if(startdate > enddate){
     return(NA)
   }
@@ -199,9 +205,7 @@ businessDuration <- function(startdate="",enddate="",starttime=NA,endtime=NA,wee
       half2 <- ((hours(close_time)*60*60)+(minutes(close_time)*60)+seconds(close_time))
       in_between_days_seconds <- in_between_days*(half1+half2)
       add_seconds <- add_seconds + in_between_days_seconds
-      
     }
-    
   }
   if(unit == "sec"){
     bd = add_seconds

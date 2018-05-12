@@ -3,6 +3,8 @@ R code that calculates business duration between two dates by excluding weekends
 
 # Example 1
 ```R
+library(BusinessDuration)
+
 #start date must be in R format
 startdate = strptime(x = "2017-07-01 02:02:00",format = "%Y-%m-%d %H:%M:%S")
 
@@ -27,6 +29,8 @@ businessDuration(startdate = startdate,enddate = enddate,starttime = starttime,e
 
 # Example 2
 ```R
+library(BusinessDuration)
+
 #start date must be in R format
 startdate = strptime('2017-12-26 02:02:00',format = "%Y-%m-%d")
 
@@ -47,4 +51,35 @@ unit="day"
 
 #Calling the function
 businessDuration(startdate = startdate,enddate = enddate,starttime = starttime,endtime = endtime,holidaylist = holidaylist,unit = unit)
+```
+
+# Example 3
+```R
+library(BusinessDuration)
+
+#Reading the file as dataframe
+inputdata<-read.csv('Sample.csv')
+
+#Converting to standard R datetime format
+inputdata$sys_created_on <- strptime(x = inputdata$sys_created_on,format = "%m/%d/%Y %H:%M")
+inputdata$resolved_at <- strptime(x = inputdata$resolved_at,format = "%m/%d/%Y %H:%M")
+
+#Business open time
+starttime<-"08:00:00"
+
+#Business close time
+endtime<-"17:00:00"
+
+#Weekend list
+weekend_list<-c("Saturday","Sunday")
+
+#Custom US holidays
+US_holiday_list <- as.Date(c("2018-01-01","2018-05-28","2018-07-04","2018-09-03","2018-11-22","2018-12-25"))
+
+#Business duration - day, hour, min, sec
+unit_hour <- "hour"
+
+#Apply function to entire dataframe
+inputdata$Biz_Hour <- lapply(1:nrow(inputdata),function(x){businessDuration(startdate = inputdata$sys_created_on[x],enddate = inputdata$resolved_at[x],starttime = starttime,endtime = endtime,weekendlist = weekend_list,holidaylist = US_holiday_list,unit = unit_hour)})
+
 ```
